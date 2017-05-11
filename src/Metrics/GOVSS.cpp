@@ -45,8 +45,8 @@ static inline double running_power( double weight, double height,
     double Af = (0.2025*pow(height, 0.725)*pow(weight, 0.425))*0.266; // Frontal Area
     double cAero = 0.5*1.2*0.9*Af*pow(speed, 2) / weight;
 
-    // Kinetic Energy contribution per kg (Arsac 2001): 0.5 * (V^2-V0^2) / d
-    double cKin = distance ? 0.5*(pow(speed,2)-pow(initial_speed,2))/distance : 0.0;
+    // Kinetic Energy contribution per kg (Arsac 2001): 0.5 * (V^2-V0^2)
+    double cKin = 0.5*(pow(speed,2)-pow(initial_speed,2));
 
     // Energy Cost of Running according to slope (Minetti 2002)
     double cSlope = 155.4*pow(slope,5) - 30.4*pow(slope,4) - 43.3*pow(slope,3) + 46.3*pow(slope,2) + 19.5*slope + 3.6;
@@ -54,7 +54,7 @@ static inline double running_power( double weight, double height,
     // Efficiency (Skiba's govss.pdf and spreadsheet)
     double eff = (0.25 + 0.054*speed)*(1 - 0.5*speed/8.33);
 
-    return (cAero + cKin + cSlope*eff) * speed * weight;
+    return ((cAero + cSlope*eff) * speed + cKin) * weight;
 }
 
 // Lactate Normalized Power, used for GOVSS and xPace calculation
